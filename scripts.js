@@ -5,6 +5,8 @@ const result = document.querySelector("#result")
 const history = document.querySelector("#history")
 const changeThemeBtn = document.querySelector("#changeTheme")
 
+wordsCount = 0
+
 const texts = [
     "When in doubt, go to the library",
     "I solemnly swear that I am up to no good",
@@ -15,7 +17,9 @@ const texts = [
 
 function newText() {
     const index = Math.floor(Math.random() * texts.length)
-    text.textContent = texts[index]
+    textChosen = texts[index]
+    wordsCount = textChosen.split(" ").length
+    text.textContent = textChosen
 }
 
 function updateTest() {
@@ -40,9 +44,13 @@ function verify() {
     const finalTime = new Date().getTime()
     const startTime = parseInt(localStorage.getItem("startTime"))
     const timeSpent = (finalTime - startTime) / 1000
+    const wordsPerSecond = wordsCount / timeSpent
+
+    result.textContent = `Awesome! You did it in ${timeSpent} seconds!`
 
     localStorage.setItem("testInCourse", false)
     input.value = ""
+    newText()
 }
 
 input.addEventListener("keyup", updateTest)
