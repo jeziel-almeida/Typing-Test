@@ -32,7 +32,7 @@ function updateTest() {
 
 function start() {
 
-    const testStatus = JSON.parse(localStorage.getItem("testInCourse")) //transforma uma string em um booleano
+    const testStatus = JSON.parse(localStorage.getItem("testInCourse")) // transforma uma string em um booleano
 
     if (!testStatus) {
         localStorage.setItem("startTime", new Date().getTime())
@@ -44,15 +44,42 @@ function verify() {
     const finalTime = new Date().getTime()
     const startTime = parseInt(localStorage.getItem("startTime"))
     const timeSpent = (finalTime - startTime) / 1000
-    const wordsPerSecond = wordsCount / timeSpent
+    const WPM = Math.floor(wordsCount / (timeSpent / 60))
 
-    result.textContent = `Awesome! You did it in ${timeSpent} seconds!`
+    result.textContent = `Awesome! You did ${WPM} words per minute!`
+
+    addToHistory(text.textContent, WPM)
 
     localStorage.setItem("testInCourse", false)
     input.value = ""
     newText()
 }
 
+function addToHistory(typedText, WPM) {
+    const itemHistory = document.createElement("p")
+
+    itemHistory.textContent = `Text "${typedText}" - WPM: ${WPM}`
+
+    history.appendChild(itemHistory)
+}
+
+function restartTest() {
+    input.value = ""
+    result.textContent = ""
+    newText()
+    localStorage.setItem("testInCourse", false)
+    history.innerHTML = ""
+}
+
+function changeTheme() {
+    const body = document.body
+
+    body.classList.toggle("light")
+    body.classList.toggle("dark")
+}
+
 input.addEventListener("keyup", updateTest)
+restart.addEventListener("click", restartTest)
+changeThemeBtn.addEventListener("click", changeTheme)
 
 newText()
